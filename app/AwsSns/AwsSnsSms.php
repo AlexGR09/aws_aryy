@@ -20,7 +20,7 @@ class AwsSnsSms
      * @var string $access_key El token de acceso que brinda la cuenta de AWS (Recomendable user IAM)
      * @var string $secret_access_key Clave secreta que brinda la cuenta de AWS (Recomendable user IAM)
      * @var string $region Zona geográfica que se usa en la cuenta de AWS
-    */
+     */
     public function __construct(string $access_key = NULL, string $secret_access_key = NULL, string $region = NULL) 
     {
         $this->access_key = $access_key ?: $_ENV['APP_AWS_SNS_ACCESS_KEY']  ?? NULL;
@@ -40,7 +40,7 @@ class AwsSnsSms
 
     public function region(): string
     {
-        return $this->region();
+        return $this->region;
     }
 
     /**
@@ -49,7 +49,7 @@ class AwsSnsSms
      * @return mixed
      * @var string $phone_number Número de teléfono del destinatario usando el formato E.164
      * @var string $message Cuerpo del mensaje que se envía al destinatario
-    */
+     */
     public function SnsSmsClient(string $phone_number = NULL, string $message = NULL)
     {
         $SnSclient = new SnsClient([
