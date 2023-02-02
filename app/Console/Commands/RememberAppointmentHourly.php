@@ -28,29 +28,29 @@ class RememberAppointmentHourly extends Command
      */
     public function handle()
     {
-        $message = '';
+        // $message = '';
 
-        $today = $;
+        // $today = $;
 
-        $citas = DB::table('medical_appointments')->where
-        switch ($fecha) {
-            case '> 6 horas < 24 horas':
-                # code...
-                break;
+        // $citas = DB::table('medical_appointments')->where
+        // switch ($fecha) {
+        //     case '> 6 horas < 24 horas':
+        //         # code...
+        //         break;
 
-            case '6 horas':
-                # code...
-                break;
+        //     case '6 horas':
+        //         # code...
+        //         break;
             
         
-            default:
-                # code...
-                break;
-        }
+        //     default:
+        //         # code...
+        //         break;
+        // }
 
 
 
-        $mesage = '';
+        // $mesage = '';
 
         return Command::SUCCESS;
     }

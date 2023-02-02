@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\AwsSns\AwsSnsSms;
+use App\Models\MedicalAppointment;
+use App\Models\Patient;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -27,50 +30,43 @@ class TestController extends Controller
     {
         $message = '';
 
-        $today = Carbon::now();
+        $date_time_today = Carbon::now();
 
-        $date_today = $today->toDateString(); 
+        $today = Carbon::now()->format('Y-m-d H');
 
-        $time_today = $today->toTimeString();
+        $tomorrow = Carbon::now()->addHours(24)->format('Y-m-d H');   
 
-        $date_time_today = Carbon::now()->format('Y-m-d H:i:s');
-
-        $prueba = Carbon::createFromFormat('Y-m-d H', '2023-02-1 22')->toDateTimeString();
-
-
-        $date_time_todayP = Carbon::now();
-
-        $pruebaP = Carbon::createFromFormat('Y-m-d H', '2023-02-6 22');
-
-        // se obtiene la diferencia en horas 
-        $diferencia = $date_time_todayP->diffInHours($pruebaP);
-
-        return 'fecha de hoy - ' . $date_time_today . ' otra fecha - ' .$prueba . 'diferencia - ' . $diferencia;
-
-        return $date_time_today;
-
-        // return $date_today . '---' . $time_today;
-
-        $citas = DB::table('medical_appointments')
-            ->where('appointment_date', $date_today)
+        $appointments = MedicalAppointment::whereBetween(DB::raw(
+            'CONCAT(appointment_date, " ", DATE_FORMAT(appointment_time, "%H"))'), [$today, $tomorrow])
             ->get();
 
-        return $citas;
+        foreach ($appointments as $key => $appointment) {
 
-        switch ($today) {
-            case '> 6 horas < 24 horas':
-                # code...
-                break;
+            $date_time_appoinment = new Carbon($appointment->appointment_date . ' ' . $appointment->appointment_time);
 
-            case '6 horas':
-                # code...
-                break;
-            
-        
-            default:
-                # code...
-                break;
+            $hours_apart = $date_time_today->diffInHours($date_time_appoinment, false);
+
+            $patient = Patient::where('id', $appointment->patient_id)->firstOrFail();
+
+            switch ($hours_apart) {
+                case $hours_apart > 22 && $hours_apart <= 24:
+                    $user = $patient->user; 
+                    return 'Phone_number: ' . $user->country_code . $user->phone_number;
+                    return 'mayor que 22, menor igual que 24';
+                    break;
+    
+                case $hours_apart > 5 && $hours_apart <= 7:
+                    return 'son 6 horas, el día de hoy';
+                    break;
+                
+                default:
+                    return 'Ninguno';
+                    break;
+            }
+
+            return $hours_apart;
         }
 
+        return $appointments;
     }
 }
