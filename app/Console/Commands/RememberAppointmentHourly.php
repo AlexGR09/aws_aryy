@@ -41,7 +41,7 @@ class RememberAppointmentHourly extends Command
 
         $today = Carbon::now()->format('Y-m-d H');
 
-        $tomorrow = Carbon::now()->addHours(25)->format('Y-m-d H');   
+        $tomorrow = Carbon::now()->addDay()->format('Y-m-d H');  
 
         $appointments = MedicalAppointment::whereBetween(DB::raw(
             'CONCAT(appointment_date, " ", DATE_FORMAT(appointment_time, "%H"))'), [$today, $tomorrow])
@@ -72,21 +72,15 @@ class RememberAppointmentHourly extends Command
             // COMBINA EL CÓDIGO DEL PAÍS Y EL NÚMERO TELÉFONICO DEL PERFIL DE USUARIO DEL PACIENTE => '+5219611234567'
             $phone_number = $patient->user->country_code . $patient->user->phone_number;
 
-            switch ($hours_apart) {
-                case $hours_apart == 24:
-                    $message = '¡Hola!, Aryy te recuerda que tienes una cita próxima el día ' . $appointment_date . ' a las ' . $appointment_time . ' hrs con tu especialista.';
-                    $remember_appoinment++;
-                    $aws_sms->SnsSmsClient($phone_number, $message);
-                    break;
-    
-                case $hours_apart == 6:
-                    $message = '¡Hola!, Aryy te recuerda que tienes una cita el día de hoy' . ' a las ' . $appointment_time . ' hrs con tu ' . $physician->professional_name . '.';
-                    $remember_appoinment++;
-                    $aws_sms->SnsSmsClient($phone_number, $message);
-                    break;
-                
-                default:
-                    break;
+            if ($hours_apart === 23) {
+                $message = '¡Hola!, Aryy te recuerda que tienes una cita próxima el día ' . $appointment_date . ' a las ' . $appointment_time . ' hrs con tu especialista.';
+                $remember_appoinment++;
+                $aws_sms->SnsSmsClient($phone_number, $message);
+            }
+            else if ($hours_apart === 6){
+                $message = '¡Hola!, Aryy te recuerda que tienes una cita el día de hoy' . ' a las ' . $appointment_time . ' hrs con tu ' . $physician->professional_name . '.';
+                $remember_appoinment++;
+                $aws_sms->SnsSmsClient($phone_number, $message);
             }
         }
 

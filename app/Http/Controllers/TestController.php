@@ -30,7 +30,9 @@ class TestController extends Controller
     {
         $today = Carbon::now()->format('Y-m-d H');
 
-        $tomorrow = Carbon::now()->addHours(25)->format('Y-m-d H');   
+        $tomorrow = Carbon::now()->addDay()->format('Y-m-d H');   
+
+        // return $tomorrow;
 
         $appointments = MedicalAppointment::whereBetween(DB::raw(
             'CONCAT(appointment_date, " ", DATE_FORMAT(appointment_time, "%H"))'), [$today, $tomorrow])
@@ -61,29 +63,22 @@ class TestController extends Controller
             // COMBINA EL CÓDIGO DEL PAÍS Y EL NÚMERO TELÉFONICO DEL PERFIL DE USUARIO DEL PACIENTE => '+5219611234567'
             $phone_number = $patient->user->country_code . $patient->user->phone_number;
 
-            switch ($hours_apart) {
-                case $hours_apart == 24:
-                    $message = [
-                        'message' => '¡Hola!, Aryy te recuerda que tienes una cita próxima el día ' . $appointment_date . ' a las ' . $appointment_time . ' hrs con tu especialista.',
-                        'hours_apart' => $hours_apart,
-                        'phone_number' => $phone_number
-                    ];
-                    array_push($res, $message);
-                    break;
-    
-                case $hours_apart == 6:
-                    $message = [
-                        'message' => '¡Hola!, Aryy te recuerda que tienes una cita el día de hoy' . ' a las ' . $appointment_time . ' hrs con tu ' . $physician->professional_name . '.',
-                        'hours_apart' => $hours_apart,
-                        'phone_number' => $phone_number
-                    ];
-                    array_push($res, $message);
-                    break;
-                
-                default:
-                    break;
+            if ($hours_apart === 23) {
+                $message = [
+                    'message' => '¡Hola!, Aryy te recuerda que tienes una cita próxima el día ' . $appointment_date . ' a las ' . $appointment_time . ' hrs con tu especialista.',
+                    'hours_apart' => $hours_apart,
+                    'phone_number' => $phone_number
+                ];
+                array_push($res, $message);
             }
-
+            else if ($hours_apart === 6){
+                $message = [
+                    'message' => '¡Hola!, Aryy te recuerda que tienes una cita el día de hoy' . ' a las ' . $appointment_time . ' hrs con tu ' . $physician->professional_name . '.',
+                    'hours_apart' => $hours_apart,
+                    'phone_number' => $phone_number
+                ];
+                array_push($res, $message);
+            }
         }
 
         return $res;
