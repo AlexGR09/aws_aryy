@@ -71,7 +71,7 @@ class TestController extends Controller
                 ];
                 array_push($res, $message);
             }
-            else if ($hours_apart === 6){
+            else if ($hours_apart === 5){
                 $message = [
                     'message' => '¡Hola!, Aryy te recuerda que tienes una cita el día de hoy' . ' a las ' . $appointment_time . ' hrs con tu ' . $physician->professional_name . '.',
                     'hours_apart' => $hours_apart,

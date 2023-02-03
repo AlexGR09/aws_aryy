@@ -77,7 +77,7 @@ class RememberAppointmentHourly extends Command
                 $remember_appoinment++;
                 $aws_sms->SnsSmsClient($phone_number, $message);
             }
-            else if ($hours_apart === 6){
+            else if ($hours_apart === 5){
                 $message = '¡Hola!, Aryy te recuerda que tienes una cita el día de hoy' . ' a las ' . $appointment_time . ' hrs con tu ' . $physician->professional_name . '.';
                 $remember_appoinment++;
                 $aws_sms->SnsSmsClient($phone_number, $message);
