@@ -14,7 +14,7 @@ class TestController extends Controller
 {
     public function test()
     {
-        $query = DB::table('cities')->get();
+        $query = DB::table('states')->get();
         
         return response()->json(['data'=> $query]);
     }
