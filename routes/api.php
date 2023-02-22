@@ -22,5 +22,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::controller(TestController::class)->group(function () {
     Route::post('/test-sms', 'index');
     Route::get('/test-cronjob', 'remember');
+    Route::get('/test', 'test');
 });
 // Route::post('/test-sms', [TestController::class, 'index']);

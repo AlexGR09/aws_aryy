@@ -12,6 +12,12 @@ use Illuminate\Support\Facades\DB;
 
 class TestController extends Controller
 {
+    public function test()
+    {
+        $query = DB::table('cities')->get();
+        
+        return response()->json(['data'=> $query]);
+    }
     
     public function index(Request $request)
     {
