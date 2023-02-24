@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Sms\Physician\RememberAppointment;
 use App\Http\Controllers\TestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,4 +25,23 @@ Route::controller(TestController::class)->group(function () {
     Route::get('/test-cronjob', 'remember');
     Route::get('/test', 'test');
 });
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    
+    Route::prefix('physician/sms')->group(function () {
+        Route::controller(RememberAppointment::class)->group(function () {
+            Route::post('/appointment/{appointment_id}', 'rememberAppointmentSms');
+        });
+    });
+
+});
+
+
+// Route::group(['middleware' => ['auth:sanctum']], function () {
+   
+// });
+
+
+
+
 // Route::post('/test-sms', [TestController::class, 'index']);
